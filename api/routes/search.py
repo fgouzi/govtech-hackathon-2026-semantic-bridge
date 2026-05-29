@@ -193,6 +193,44 @@ class SearchResponse(BaseModel):
     results: list[dict[str, Any]]
 
 
+# ── FR→DE translation dictionary (mirrors the LLM system prompt) ──────────────
+_FR_DE: dict[str, str] = {
+    "santé": "Gesundheit", "hôpital": "Krankenhaus", "population": "Bevölkerung",
+    "immobilier": "Immobilien", "bâtiment": "Gebäude", "communes": "Gemeinden",
+    "commune": "Gemeinde", "transport": "Verkehr", "éducation": "Bildung",
+    "environnement": "Umwelt", "emploi": "Beschäftigung", "énergie": "Energie",
+    "finance": "Finanzen", "agriculture": "Landwirtschaft", "forêt": "Wald",
+    "eau": "Wasser", "sol": "Boden", "air": "Luft", "tourisme": "Tourismus",
+    "entreprise": "Unternehmen", "personne": "Person", "nom": "Name",
+    "adresse": "Adresse", "canton": "Kanton", "district": "Bezirk",
+    "statistique": "Statistik", "registre": "Register", "carte": "Karte",
+    "géographie": "Geographie", "économie": "Wirtschaft", "social": "Sozial",
+    "logement": "Wohnen", "construction": "Bau", "prix": "Preis",
+    "revenu": "Einkommen", "salaire": "Lohn", "chômage": "Arbeitslosigkeit",
+}
+
+
+def _translate_fr_de(query: str) -> str | None:
+    """Return a German translation of key words if any FR terms are detected."""
+    q_lower = query.lower()
+    translated_words = []
+    matched = False
+    for fr, de in _FR_DE.items():
+        if fr in q_lower:
+            translated_words.append(de)
+            matched = True
+        else:
+            # Keep non-FR words as-is (proper nouns, numbers, etc.)
+            pass
+    if not matched:
+        return None
+    # Build DE query: replace matched FR words and keep remaining tokens
+    result = query
+    for fr, de in _FR_DE.items():
+        result = re.sub(re.escape(fr), de, result, flags=re.I)
+    return result if result != query else None
+
+
 @router.get("/search")
 async def search(
     q: Annotated[str, Query(description="Search query")],
@@ -206,7 +244,37 @@ async def search(
 ) -> SearchResponse:
     if resource_type == "concept":
         return await _search_concepts(q, page, page_size, client)
-    return await _search_full_text(q, resource_type, page, page_size, client)
+    return await _search_full_text_bilingual(q, resource_type, page, page_size, client)
+
+
+async def _search_full_text_bilingual(
+    query: str,
+    resource_type: str,
+    page: int,
+    page_size: int,
+    client: MCPClient,
+) -> SearchResponse:
+    """Search in original query + German translation; merge and deduplicate."""
+    import asyncio  # noqa: PLC0415
+
+    de_query = _translate_fr_de(query)
+
+    async def _fetch(q: str) -> tuple[int, list[dict[str, Any]]]:
+        return await _search_full_text(q, resource_type, page, page_size, client)
+
+    if de_query and de_query.lower() != query.lower():
+        (total_fr, items_fr), (_, items_de) = await asyncio.gather(
+            _fetch(query), _fetch(de_query)
+        )
+        # Merge: original query results first, then DE results not already seen
+        seen: set[str] = {r.get("id", "") or r.get("identifier", "") for r in items_fr}
+        extra = [r for r in items_de if (r.get("id", "") or r.get("identifier", "")) not in seen]
+        merged = items_fr + extra
+        total = total_fr + len(extra)
+    else:
+        total, merged = await _fetch(query)
+
+    return SearchResponse(query=query, total=total, resource_type=resource_type, results=merged)
 
 
 async def _search_full_text(
@@ -215,7 +283,7 @@ async def _search_full_text(
     page: int,
     page_size: int,
     client: MCPClient,
-) -> SearchResponse:
+) -> tuple[int, list[dict[str, Any]]]:
     try:
         result = await client.call_tool(
             "full_text_search_resources",
@@ -242,8 +310,7 @@ async def _search_full_text(
             if (r.get("type") or r.get("resourceType") or "").lower() == resource_type.lower()
         ]
 
-    results = [_normalize_result(r) for r in raw_items]
-    return SearchResponse(query=query, total=total, resource_type=resource_type, results=results)
+    return total, [_normalize_result(r) for r in raw_items]
 
 
 async def _search_concepts(
@@ -260,7 +327,8 @@ async def _search_concepts(
         data = json.loads(result.text()) if result.text() else {}
     except Exception:
         # Fallback to full-text search
-        return await _search_full_text(query, "concept", page, page_size, client)
+        total, results = await _search_full_text(query, "concept", page, page_size, client)
+        return SearchResponse(query=query, total=total, resource_type="concept", results=results)
 
     pagination = data.get("pagination", {})
     total = pagination.get("total_rows", 0)
