@@ -1,0 +1,8 @@
+{
+    "chat.tools.terminal.autoApprove": {
+        "/^if \\(Test-Path \"c:\\\\dev\\\\hack2026\\\\\\.env\"\\) \\{ Get-Content \"c:\\\\dev\\\\hack2026\\\\\\.env\" \\} else \\{ \"No \\.env file found\" \\}$/": {
+            "approve": true,
+            "matchCommandLine": true
+        }
+    }
+}

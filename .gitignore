@@ -1,0 +1,23 @@
+.env
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+dist/
+build/
+*.egg-info/
+
+# Data artifacts (keep sample CSVs, ignore generated)
+data/cache.db
+data/faiss.index
+data/*.db
+
+# Secrets
+.webui_secret_key
+
+# OS
+.DS_Store
+Thumbs.db

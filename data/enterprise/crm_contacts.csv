@@ -1,0 +1,21 @@
+contact_id,display_name,date_of_birth,company_name,email,postal_code,revenue_chf
+CRM001,Anna Müller,1985-03-12,TechCorp AG,anna.mueller@techcorp.ch,8001,125000
+CRM002,Peter Schmid,1978-11-24,SalesForce GmbH,peter.schmid@salesforce.ch,8400,87000
+CRM003,Marie Dubois,1990-07-08,Marketing Plus SA,marie.dubois@mktplus.ch,1003,65000
+CRM004,Sophie Wagner,1986-04-15,Wagner & Partner,sophie.wagner@partner.ch,3001,210000
+CRM005,Marco Frei,1979-09-30,FreiTech AG,marco.frei@freitech.ch,8001,345000
+CRM006,Thomas Bauer,1975-12-03,FinanceFirst AG,thomas.bauer@financefirst.ch,8400,195000
+CRM007,Isabelle Crettaz,1988-06-20,Legal Solutions SA,isabelle.crettaz@legalsol.ch,1204,178000
+CRM008,Michael Huber,1983-06-25,HuberIT GmbH,michael.huber@huberit.ch,8610,230000
+CRM009,Kevin Müller,1992-12-05,StartupXYZ AG,kevin.mueller@startupxyz.ch,8001,45000
+CRM010,David Fischer,1980-04-07,FischerSales KG,david.fischer@fischersales.ch,3001,98000
+CRM011,Claudia Hofmann,1987-08-19,Hofmann Consulting,claudia.hofmann@hofmann.ch,1003,155000
+CRM012,René Martin,1993-01-29,Martin Innovations,rene.martin@innovations.ch,8006,78000
+CRM013,Ingrid Lehmann,1976-07-15,Lehmann Finance AG,ingrid.lehmann@lehmannfin.ch,8400,320000
+CRM014,Jennifer Kurz,1991-03-08,Kurz & Co,jennifer.kurz@kurzco.ch,3001,115000
+CRM015,Nathalie Brunner,1992-03-22,BrunnerPro GmbH,nathalie.brunner@brunnerpro.ch,8001,88000
+CRM016,Andreas Baumann,1984-09-04,Baumann Engineering,andreas.baumann@baueng.ch,8610,265000
+CRM017,Monika Steiner,1979-05-18,Steiner Law AG,monika.steiner@steinerlaw.ch,8001,290000
+CRM018,Fabian Roth,1985-07-12,Roth Digital AG,fabian.roth@rothdigital.ch,8400,175000
+CRM019,Beatrice Gerber,1981-08-03,Gerber Finance,beatrice.gerber@gerberfinance.ch,8001,430000
+CRM020,Christoph Maurer,1989-02-11,MaurerTech GmbH,christoph.maurer@maurertech.ch,8006,195000

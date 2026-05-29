@@ -1,0 +1,27 @@
+﻿
+
+StatusCode        : 200
+StatusDescription : OK
+Content           : {"schema":{"name":"36398596@bundesamt-fur-statistik-bfs","f
+                    ields":[{"name":"TIME_PERIOD","data_type":"INTEGER","sample
+                    _values":[],"nullable":true},{"name":"GEO","data_type":"STR
+                    ING","sample_values":[]...
+RawContent        : HTTP/1.1 200 OK
+                    Content-Length: 6250
+                    Content-Type: application/json
+                    Date: Thu, 28 May 2026 08:00:42 GMT
+                    Server: uvicorn
+                    
+                    {"schema":{"name":"36398596@bundesamt-fur-statistik-bfs","f
+                    ields":[{"name...
+Forms             : 
+Headers           : {[Content-Length, 6250], [Content-Type, application/json], 
+                    [Date, Thu, 28 May 2026 08:00:42 GMT], [Server, uvicorn]}
+Images            : {}
+InputFields       : {}
+Links             : {}
+ParsedHtml        : 
+RawContentLength  : 6250
+
+
+
